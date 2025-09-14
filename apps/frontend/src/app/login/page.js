@@ -4,9 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 import Input from "@/components/Input";
+import { useAuth } from "../context/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth(); // get login function from context
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -19,7 +21,13 @@ export default function LoginPage() {
         email: form.email.trim(),
         password: form.password,
       });
-      localStorage.setItem("token", res.data.token);
+
+      const token = res.data.token;
+
+      // Update global auth state
+      login(token);
+
+      // Redirect to bookings page
       router.push("/bookings");
     } catch (err) {
       console.error("Login failed:", err.response?.data?.error || err.message);

@@ -1,23 +1,15 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import Link from "next/link"; // Import the Link component
-import api from "../lib/api";
+import Link from "next/link";
+import { useAuth } from "../app/context/AuthContext";
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [user, setUser] = useState(null);
+  const { user, logout, loading } = useAuth();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      api.get("/auth/verify")
-        .then(() => setUser(true))
-        .catch(() => setUser(null));
-    }
-  }, [pathname]);
+  if (loading) return null; // optional spinner
 
   return (
     <nav className="bg-blue-600 text-white px-6 py-4 flex justify-between items-center">
@@ -27,28 +19,14 @@ export default function Navbar() {
       <div className="space-x-4 flex items-center">
         {user ? (
           <>
-            <Link
-              href="/bookings"
-              className={`${
-                pathname === "/bookings" ? "underline font-semibold" : ""
-              }`}
-            >
+            <Link href="/bookings" className={`${pathname === "/bookings" ? "underline font-semibold" : ""}`}>
               My Bookings
             </Link>
-            <Link
-              href="/admin"
-              className={`${
-                pathname === "/admin" ? "underline font-semibold" : ""
-              }`}
-            >
+            <Link href="/admin" className={`${pathname === "/admin" ? "underline font-semibold" : ""}`}>
               Admin
             </Link>
             <button
-              onClick={() => {
-                localStorage.removeItem("token");
-                setUser(null);
-                router.push("/login");
-              }}
+              onClick={() => { logout(); router.push("/login"); }}
               className="bg-red-500 px-4 py-2 rounded"
             >
               Logout
@@ -56,12 +34,8 @@ export default function Navbar() {
           </>
         ) : (
           <>
-            <Link href="/login" className="bg-green-500 px-4 py-2 rounded">
-              Login
-            </Link>
-            <Link href="/register" className="bg-yellow-500 px-4 py-2 rounded">
-              Register
-            </Link>
+            <Link href="/login" className="bg-green-500 px-4 py-2 rounded">Login</Link>
+            <Link href="/register" className="bg-yellow-500 px-4 py-2 rounded">Register</Link>
           </>
         )}
       </div>
