@@ -1,0 +1,45 @@
+// schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  name      String?
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+
+model Booking {
+  id        Int           @id @default(autoincrement())
+  userId    Int
+  user      User          @relation(fields: [userId], references: [id])
+  seats     BookingSeat[] // relation to seats
+  createdAt DateTime      @default(now())
+}
+
+model Seat {
+  id        Int           @id @default(autoincrement())
+  number    Int           @unique // Seat number (1–80)
+  row       Int
+  bookings  BookingSeat[] // relation to bookings
+}
+
+model BookingSeat {
+  id        Int      @id @default(autoincrement())
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  bookingId Int
+  seat      Seat     @relation(fields: [seatId], references: [id])
+  seatId    Int
+
+  @@unique([seatId]) // ensures a seat can’t be booked twice
+}
