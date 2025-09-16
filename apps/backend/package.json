@@ -2,7 +2,10 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
+  "prisma": {
+      "seed": "node prisma/seed.js"
+    },
+    "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
     "seed": "node prisma/seed.js",
