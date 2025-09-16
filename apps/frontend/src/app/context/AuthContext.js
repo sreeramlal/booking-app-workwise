@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 // Use require instead of import for CommonJS compatibility
-const jwtDecode = require('jwt-decode');  // Use CommonJS require here
+const {jwtDecode} = require('jwt-decode');  // Use CommonJS require here
 
 const AuthContext = createContext();
 
@@ -12,11 +12,12 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log("Token from localStorage:", token); // 👀 check token
     if (token) {
       try {
         const decoded = jwtDecode(token);  // Use jwtDecode directly
         console.log("Decoded JWT:", decoded); // 👀 check payload
-        setUser({ id: decoded.id || decoded.userId, email: decoded.email });
+        setUser({ id: decoded.userId, email: decoded.email });
       } catch (err) {
         console.error("Invalid token:", err);
         setUser(null);
