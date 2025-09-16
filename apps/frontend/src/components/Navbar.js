@@ -22,9 +22,6 @@ export default function Navbar() {
             <Link href="/bookings" className={`${pathname === "/bookings" ? "underline font-semibold" : ""}`}>
               My Bookings
             </Link>
-            <Link href="/admin" className={`${pathname === "/admin" ? "underline font-semibold" : ""}`}>
-              Admin
-            </Link>
             <button
               onClick={() => { logout(); router.push("/login"); }}
               className="bg-red-500 px-4 py-2 rounded"
