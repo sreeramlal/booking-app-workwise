@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "@/lib/api";
-import jwtDecode from "jwt-decode";
+import { decode } from 'jwt-decode';
 
 const AuthContext = createContext();
 
@@ -14,7 +14,8 @@ export function AuthProvider({ children }) {
   const token = localStorage.getItem("token");
   if (token) {
     try {
-      const decoded = jwtDecode(token);
+      const decoded = decode(token);
+
       console.log("Decoded JWT:", decoded); // 👀 check payload
       setUser({ id: decoded.id || decoded.userId, email: decoded.email });
     } catch (err) {
