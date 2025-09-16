@@ -27,6 +27,7 @@ export default function BookingsPage() {
 
   const handleBook = async ({ count, flexible }) => {
     try {
+      console.log(user?.id,user)
       const res = await api.post("/bookings", {
         seatCount: count,
         flexible,
