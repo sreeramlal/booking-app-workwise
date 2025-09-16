@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import api from "../../lib/api"; // <-- Import the api instance here
+import api from "../../lib/api";
 import SeatMap from "../../components/SeatMap";
 import BookingForm from "../../components/BookingForm";
-import {useAuth, user}  from "../context/AuthContext";
-const { user } = useAuth();
+import { useAuth } from "../context/AuthContext"; // ✅ only import useAuth
 
 export default function BookingsPage() {
   const [seats, setSeats] = useState([]);
   const [error, setError] = useState("");
   const [bookedSeats, setBookedSeats] = useState(null);
+  const { user } = useAuth(); // ✅ call inside component
 
   const fetchSeats = () => {
     api.get("/seats")
@@ -26,19 +26,19 @@ export default function BookingsPage() {
   }, []);
 
   const handleBook = async ({ count, flexible }) => {
-  try {
-    const res = await api.post("/bookings", {
-      seatCount: count,
-      flexible,
-      userId: user?.id, // ✅ real userId here
-    });
-    setBookedSeats(res.data.seats);
-    fetchSeats();
-  } catch (err) {
-    console.error("Booking failed:", err);
-    setError(err.response?.data?.message || "Booking failed.");
-  }
-};
+    try {
+      const res = await api.post("/bookings", {
+        seatCount: count,
+        flexible,
+        userId: user?.id, // ✅ real userId here
+      });
+      setBookedSeats(res.data.seats);
+      fetchSeats();
+    } catch (err) {
+      console.error("Booking failed:", err);
+      setError(err.response?.data?.message || "Booking failed.");
+    }
+  };
 
   return (
     <div className="container mx-auto p-4">
