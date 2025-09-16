@@ -2,20 +2,27 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "@/lib/api";
+import jwtDecode from "jwt-decode";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // will hold { id, email } etc.
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      api.get("/auth/verify")
-        .then(() => setUser(true))
-        .catch(() => setUser(null))
-        .finally(() => setLoading(false));
+      try {
+        // decode token to extract user info
+        const decoded = jwtDecode(token);
+        setUser({ id: decoded.id, email: decoded.email }); // assuming your JWT payload has these
+      } catch (err) {
+        console.error("Invalid token:", err);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     } else {
       setUser(null);
       setLoading(false);
@@ -24,7 +31,13 @@ export function AuthProvider({ children }) {
 
   const login = (token) => {
     localStorage.setItem("token", token);
-    setUser(true);
+    try {
+      const decoded = jwtDecode(token);
+      setUser({ id: decoded.id, email: decoded.email });
+    } catch (err) {
+      console.error("Failed to decode token:", err);
+      setUser(null);
+    }
   };
 
   const logout = () => {

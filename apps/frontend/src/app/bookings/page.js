@@ -22,18 +22,22 @@ export default function BookingsPage() {
   useEffect(() => {
     fetchSeats();
   }, []);
+  const { user } = useAuth();
 
   const handleBook = async ({ count, flexible }) => {
-    try {
-      const userId = 1;
-      const res = await api.post("/bookings", { seatCount: count, flexible,userId });
-      setBookedSeats(res.data.seats);
-      fetchSeats(); // Refresh seats after booking
-    } catch (err) {
-      console.error("Booking failed:", err);
-      setError(err.response?.data?.message || "Booking failed.");
-    }
-  };
+  try {
+    const res = await api.post("/bookings", {
+      seatCount: count,
+      flexible,
+      userId: user?.id, // ✅ real userId here
+    });
+    setBookedSeats(res.data.seats);
+    fetchSeats();
+  } catch (err) {
+    console.error("Booking failed:", err);
+    setError(err.response?.data?.message || "Booking failed.");
+  }
+};
 
   return (
     <div className="container mx-auto p-4">
