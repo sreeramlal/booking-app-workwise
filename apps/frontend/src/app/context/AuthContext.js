@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
       try {
         // decode token to extract user info
         const decoded = jwtDecode(token);
-        setUser({ id: decoded.id, email: decoded.email }); // assuming your JWT payload has these
+        setUser({ id: decoded.userId, email: decoded.email }); // assuming your JWT payload has these
       } catch (err) {
         console.error("Invalid token:", err);
         setUser(null);
