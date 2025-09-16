@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
     try {
       const decoded = jwtDecode(token);
       console.log("Decoded JWT:", decoded); // 👀 check payload
-      setUser({ id: decoded.id, email: decoded.email });
+      setUser({ id: decoded.id || decoded.userId, email: decoded.email });
     } catch (err) {
       console.error("Invalid token:", err);
       setUser(null);
