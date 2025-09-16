@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import api from "../../lib/api"; // <-- Import the api instance here
 import SeatMap from "../../components/SeatMap";
 import BookingForm from "../../components/BookingForm";
+import {useAuth, user}  from "../context/AuthContext";
+const { user } = useAuth();
 
 export default function BookingsPage() {
   const [seats, setSeats] = useState([]);
@@ -22,7 +24,6 @@ export default function BookingsPage() {
   useEffect(() => {
     fetchSeats();
   }, []);
-  const { user } = useAuth();
 
   const handleBook = async ({ count, flexible }) => {
   try {
