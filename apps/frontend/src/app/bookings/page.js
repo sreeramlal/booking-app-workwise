@@ -29,9 +29,10 @@ export default function BookingsPage() {
     try {
       console.log(user?.id,user)
       const res = await api.post("/bookings", {
+        userId: user?.id,
         seatCount: count,
-        flexible,
-        userId: user?.id, // ✅ real userId here
+        flexible
+         // ✅ real userId here
       });
       setBookedSeats(res.data.seats);
       fetchSeats();

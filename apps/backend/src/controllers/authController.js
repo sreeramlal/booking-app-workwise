@@ -20,7 +20,12 @@ async function register(req, res) {
       data: { name, email, password: hashedPassword },
     });
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(
+      { id: user.id, email: user.email }, // ✅ standardized payload
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
     res.status(201).json({ token });
   } catch (err) {
     console.error("Registration error:", err);
@@ -42,7 +47,13 @@ async function login(req, res) {
       return res.status(401).json({ error: "Invalid credentials." });
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    // ✅ Make token payload same as register
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
     res.status(200).json({ token });
   } catch (err) {
     console.error("Login error:", err);

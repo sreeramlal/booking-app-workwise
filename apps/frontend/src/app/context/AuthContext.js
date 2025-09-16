@@ -11,23 +11,24 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        // decode token to extract user info
-        const decoded = jwtDecode(token);
-        setUser({ id: decoded.userId, email: decoded.email }); // assuming your JWT payload has these
-      } catch (err) {
-        console.error("Invalid token:", err);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    } else {
+  const token = localStorage.getItem("token");
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      console.log("Decoded JWT:", decoded); // 👀 check payload
+      setUser({ id: decoded.id, email: decoded.email });
+    } catch (err) {
+      console.error("Invalid token:", err);
       setUser(null);
+    } finally {
       setLoading(false);
     }
-  }, []);
+  } else {
+    setUser(null);
+    setLoading(false);
+  }
+}, []);
+
 
   const login = (token) => {
     localStorage.setItem("token", token);
