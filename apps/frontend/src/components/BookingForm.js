@@ -10,7 +10,7 @@ export default function BookingForm({ onBook }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // Ensure count is a number before submitting
+    // Ensure count is a number before submitting..
     const seatCount = parseInt(count, 10);
     if (isNaN(seatCount) || seatCount < 1 || seatCount > 7) {
       alert("You can only book between 1 and 7 seats.");
